@@ -36,8 +36,7 @@
  */
 (function ($) {
 
-  $.fn.flipCounter = function (method) {
-
+  $.fn.flipCounter = function(method){
     // Public Variables
     var obj = false; // reference to DOM object
 
@@ -49,7 +48,7 @@
       counterFieldName: 'counter-value',// default name for the counter hidden field
       digitHeight: 40, // default height of each digit in sprite image
       digitWidth: 30, // default width of each digit in sprite image
-      imagePath: '/static/flipCounter-medium.png',// default path of sprite image relative to html document
+      imagePath: 'img/flipCounter-medium.png',// default path of sprite image relative to html document
       easing: false,// default easing function, this can be overridden by jQuery.easing methods (i.e.  jQuery.easing.easeOutCubic)
       duration: 10000, // default duration of animations
       onAnimationStarted: false, // callback for animation starting
@@ -68,7 +67,6 @@
         return this.each(
 
           function () {
-
             // Set reference to this DOM object
             obj = $(this);
 
@@ -78,15 +76,12 @@
 
             // new options override previous initializiation options
             options = $.extend(old_options, new_options);
-
             obj.data('flipCounter', options);
 
             // if number isn't set then try and get it from the hidden field
-            if (options.number === false || options.number == 0) {
-
-              (_getCounterValue() !== false) ? options.number = _getCounterValue() : options.number = 0;
+            if(options.number === false || options.number == 0) {
+              options.number = (_getCounterValue() !== false) ? _getCounterValue() : 0;
               _setOption('number', options.number);
-
             }
 
             // Default Options
@@ -124,41 +119,28 @@
 
         return this.each(
 
-          function () {
-
+          function(){
             obj = $(this);
-
-            if (!_isInitialized()) $(this).flipCounter();
-
+            if( !_isInitialized() ){ obj.flipCounter(); }
             _setOption('number', value);
-
             _renderCounter();
-
           }
 
         );
-
       },
 
       // Render a number in the counter (synonym for above)
       setNumber: function (value) {
-
         return this.each(
 
           function () {
-
             obj = $(this);
-
-            if (!_isInitialized()) $(this).flipCounter();
-
+            if( !_isInitialized() ){ obj.flipCounter(); }
             _setOption('number', value);
-
             _renderCounter();
-
           }
 
         );
-
       },
 
       // Get the number currently rendered
@@ -167,19 +149,12 @@
         var val = false;
 
         this.each(
-
           val = function () {
-
             obj = $(this);
-
-            if (!_isInitialized()) $(this).flipCounter();
-
+            if(!_isInitialized()){ obj.flipCounter(); }
             val = _getOption('number');
-
             return val;
-
           }
-
         );
 
         return val;
@@ -190,17 +165,11 @@
       startAnimation: function (options) {
 
         return this.each(
-
           function () {
-
             obj = $(this);
-
-            if (!_isInitialized()) $(this).flipCounter();
-
+            if(!_isInitialized()){ obj.flipCounter(); }
             obj.trigger('startAnimation', options);
-
           }
-
         );
 
       },
@@ -209,17 +178,11 @@
       stopAnimation: function () {
 
         return this.each(
-
           function () {
-
             obj = $(this);
-
-            if (!_isInitialized()) $(this).flipCounter();
-
+            if(!_isInitialized()){ obj.flipCounter(); }
             obj.trigger('stopAnimation');
-
           }
-
         );
 
       },
@@ -228,17 +191,11 @@
       pauseAnimation: function () {
 
         return this.each(
-
-          function () {
-
+          function(){
             obj = $(this);
-
-            if (!_isInitialized()) $(this).flipCounter();
-
+            if(!_isInitialized()){ obj.flipCounter(); }
             obj.trigger('pauseAnimation');
-
           }
-
         );
 
       },
@@ -247,15 +204,10 @@
       resumeAnimation: function () {
 
         return this.each(
-
-          function () {
-
+          function(){
             obj = $(this);
-
-            if (!_isInitialized()) $(this).flipCounter();
-
+            if(!_isInitialized()){ $(this).flipCounter(); }
             obj.trigger('resumeAnimation');
-
           }
 
         );
@@ -265,234 +217,150 @@
     };
 
     // Call public methods
-    if (methods[method]) {
-
+    if(methods[method]) {
       return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-
-    } else if (typeof method === 'object' || !method) {
-
+    } else if(typeof method === 'object' || !method) {
       return methods.init.apply(this, arguments);
-
     } else {
-
       $.error('Method ' + method + ' does not exist on jQuery.flipCounter');
-
     }
 
     // Private Functions
 
     function _isInitialized() {
-
       var data = obj.data('flipCounter');
-
-      if (typeof data == 'undefined') return false
-
+      if(typeof data === 'undefined'){ return false; }
       return true;
-
     }
 
     // Get an option
 
 
     function _getOption(option) {
-
-      var data = obj.data('flipCounter');
-      var value = data[option];
-
-      if (typeof value !== 'undefined') {
-
-        return value;
-
-      }
-
+      var data   = obj.data('flipCounter'),
+          value  = data[option];
+      if(typeof value !== 'undefined'){ return value; }
       return false;
-
     }
 
     // Set an option
-
-
     function _setOption(option, value) {
-
       var data = obj.data('flipCounter');
-
       data[option] = value;
       obj.data('flipCounter', data);
-
     }
 
     // Setup the counter
-
-
-    function _setupCounter() {
-
+    function _setupCounter(){
       // If object doesn't have a hidden field then create one
-      if (obj.children('[name="' + _getOption('counterFieldName') + '"]').length < 1) {
-
+      if(obj.children('[name="' + _getOption('counterFieldName') + '"]').length < 1) {
         obj.append('<input type="hidden" name="' + _getOption('counterFieldName') + '" value="' + _getOption('number') + '" />');
-
       }
 
       // Add or remove enough digits to fit number
-      var digits_length = _getDigitsLength();
-      var num_digits_needed = _getNumberFormatted().length;
+      var digits_length     = _getDigitsLength(),
+          num_digits_needed = _getNumberFormatted().length;
 
-      if (num_digits_needed > digits_length) {
-
+      if(num_digits_needed > digits_length) {
         for (i = 0; i < (num_digits_needed - digits_length); i++) {
-
           var digit_element = $('<span class="' + _getOption('digitClass') + '" style="' + _getDigitStyle('0') + '" />');
-
           obj.prepend(digit_element);
-
         }
-
-      } else if (num_digits_needed < digits_length) {
-
+      }else if(num_digits_needed < digits_length) {
         for (i = 0; i < (digits_length - num_digits_needed); i++) {
-
           obj.children('.' + _getOption('digitClass')).first().remove();
-
         }
-
       }
 
       // Add the invisible span if it doesn't already exist
       obj.find('.' + _getOption('digitClass')).each(
-
-        function () {
-
-          if (0 == $(this).find('span').length)
-          {
-
-            $(this).append('<span style="visibility:hidden">0</span>');
-
+        function() {
+          var $element = $(this);
+          if(0 == $element.find('span').length){
+            $element.append('<span style="visibility:hidden">0</span>');
           }
-
         }
-
       );
-
     }
 
     // Render the counter
     function _renderCounter() {
-
       _setupCounter();
 
-      var number = _getNumberFormatted();
-      var digits = _getDigits();
-      var pos = 0;
+      var number  = _getNumberFormatted(),
+          digits  = _getDigits(),
+          pos     = 0;
 
       $.each(digits, function (index, value) {
-
         digit = number.toString().charAt(pos);
         $(this).attr('style',  _getDigitStyle(digit));
         $(this).find('span').text(digit.replace(' ', '&nbsp;').toString()); // replace empty space with &nbsp; to prevent rendering bug
-        pos++
-
+        pos++;
       });
-
       _setCounterValue();
-
     }
 
     // get a collection of the objects digit DOM elements
-    function _getDigits() {
-
-      return obj.children('.' + _getOption('digitClass'));
-
-    }
+    function _getDigits() { return obj.children('.' + _getOption('digitClass')); }
 
     // get the current number of digit DOM elements
-    function _getDigitsLength() {
-
-      return _getDigits().length;
-
-    }
+    function _getDigitsLength() { return _getDigits().length; }
 
     // get the value stored in the counter field
     function _getCounterValue() {
-
       var val = parseFloat(obj.children('[name="' + _getOption('counterFieldName') + '"]').val());
-
-      if (val == val == false) return false; // test for NaN
-
+      if(val === false){ return false; } // test for NaN
       return val;
-
     }
 
     // update the counter field with the current number
     function _setCounterValue() {
-
       obj.children('[name="' + _getOption('counterFieldName') + '"]').val(_getOption('number'));
-
     }
 
     // format number as a string according to given options
     function _getNumberFormatted() {
-
       var number = _getOption('number');
 
       // check is numeric
-      if (typeof number !== 'number') {
-
+      if(typeof number !== 'number') {
         $.error('Attempting to render non-numeric value.');
         return '0';
-
       }
 
       var str_number = '';
 
       // Number formatter plugin is being used
-      if (_getOption('formatNumberOptions'))
-      {
-
-        if ($.formatNumber) {
-
+      if(_getOption('formatNumberOptions')){
+        if($.formatNumber) {
           str_number = $.formatNumber(number, _getOption('formatNumberOptions'));
-
         } else {
-
           $.error('The numberformatter jQuery plugin is not loaded. This plugin is required to use the formatNumberOptions setting.');
-
         }
-
       } else {
-
         // if greater than zero add leading zeros if necessary
-        if (number >= 0) {
-
-          var num_integral_digits = _getOption('numIntegralDigits');
-          var num_extra_zeros = num_integral_digits - number.toFixed().toString().length;
+        if(number >= 0) {
+          var num_integral_digits = _getOption('numIntegralDigits'),
+              num_extra_zeros     = num_integral_digits - number.toFixed().toString().length;
 
           for (var i = 0; i < num_extra_zeros; i++) {
-
             str_number += '0';
-
           }
 
           str_number += number.toFixed(_getOption('numFractionalDigits'));
 
-         // if less than zero remove leading zeros and add minus sign
+          // if less than zero remove leading zeros and add minus sign
         } else {
-
           str_number = '-' + Math.abs(number.toFixed(_getOption('numFractionalDigits')));
-
         }
 
       }
-
       return str_number;
-
     }
 
     // Get CSS background image positiong
-    function _getDigitStyle(character)
-    {
-
+    function _getDigitStyle(character){
       var style = "height:" + _getOption('digitHeight') + "px; width:" + _getOption('digitWidth') + "px; display:inline-block; background-image:url('" + _getOption('imagePath') + "'); background-repeat:no-repeat; ";
-
       var bg_pos = new Array();
 
       bg_pos['1'] = _getOption('digitWidth') * 0;
@@ -510,142 +378,100 @@
       bg_pos[','] = _getOption('digitWidth') * -12;
       bg_pos[' '] = _getOption('digitWidth') * -13;
 
-      if( character in bg_pos)
-      {
-
+      if( character in bg_pos){
         return style + 'background-position: ' + bg_pos[character] + 'px 0px;'
-
       }
-
       return style;
-
     }
 
     // Start the animation
     function _startAnimation(options) {
 
-      if (true == _getOption('animating')) _stopAnimation();
+      if(true == _getOption('animating')){ _stopAnimation(); }
 
-      if (typeof options !== 'undefined') {
-
+      if(typeof options !== 'undefined') {
         options = $.extend(obj.data('flipCounter'), options);
         obj.data('flipCounter', options);
-
       } else {
-
         options = obj.data('flipCounter');
-
       }
 
-      if (false == _getOption('start_time')) {
-
+      if(false === _getOption('start_time')) {
         _setOption('start_time', new Date().getTime());
-
       }
 
-      if (false == _getOption('time')) {
-
+      if(false === _getOption('time')) {
         _setOption('time', 0);
-
       }
 
-      if (false == _getOption('elapsed')) {
-
+      if(false === _getOption('elapsed')) {
         _setOption('elapsed', '0.0');
-
       }
 
-      if (false == _getOption('start_number')) {
-
+      if(false === _getOption('start_number')) {
         _setOption('start_number', _getOption('number'));
-
-        if (false == _getOption('start_number')) {
-
+        if(false === _getOption('start_number')) {
           _setOption('start_number', 0);
-
         }
-
       }
 
       _doAnimation();
 
       var onAnimationStarted = _getOption('onAnimationStarted');
 
-      if (typeof onAnimationStarted == 'function') onAnimationStarted.call(obj, obj);
-
+      if(typeof onAnimationStarted === 'function'){ onAnimationStarted.call(obj, obj); }
     }
 
     // Do animation step
     function _doAnimation() {
+      var start_time     = _getOption('start_time'),
+          time           = _getOption('time'),
+          elapsed        = _getOption('elapsed'),
+          start_number   = _getOption('start_number'),
+          number_change  = _getOption('end_number') - _getOption('start_number');
 
-      var start_time = _getOption('start_time');
-      var time = _getOption('time');
-      var elapsed = _getOption('elapsed');
-      var start_number = _getOption('start_number');
-      var number_change = _getOption('end_number') - _getOption('start_number');
-
-      if (number_change == 0) return false;
+      if(number_change == 0){ return false; }
 
       var duration = _getOption('duration');
-      var easing = _getOption('easing');
+      var easing   = _getOption('easing');
 
       _setOption('animating', true);
 
       function animation_step() {
-
         time += 10;
         elapsed = Math.floor(time / 10) / 10;
 
-        if (Math.round(elapsed) == elapsed) {
-
+        if(Math.round(elapsed) == elapsed) {
           elapsed += '.0';
+        }
 
+        var diff = (new Date().getTime() - start_time) - time;
+        var new_num = 0;
+
+        if(typeof easing === 'function') {
+          new_num = easing.apply(obj, [false, time, start_number, number_change, duration]);
+        }else{
+          new_num = _noEasing(false, time, start_number, number_change, duration);
         }
 
         _setOption('elapsed', elapsed);
-
-        var diff = (new Date().getTime() - start_time) - time;
-
-        var new_num = 0;
-
-        if(typeof easing == 'function') {
-
-          new_num = easing.apply(obj, [false, time, start_number, number_change, duration]);
-        }
-        else
-        {
-
-          new_num = _noEasing(false, time, start_number, number_change, duration);
-
-        }
-
         _setOption('number', new_num);
-
         _setOption('time', time);
-
         _renderCounter();
 
-        if (time < duration) {
-
+        if(time < duration) {
           _setOption('interval', window.setTimeout(animation_step, (10 - diff)));
-
         } else {
-
           _stopAnimation();
-
         }
 
       }
-
       window.setTimeout(animation_step, 10);
-
     }
 
     // Stop animation
     function _stopAnimation() {
-
-      if (false == _getOption('animating')) return false;
-
+      if(false === _getOption('animating')){ return false; }
       clearTimeout(_getOption('interval'));
 
       _setOption('start_time', false);
@@ -657,68 +483,45 @@
 
       var onAnimationStopped = _getOption('onAnimationStopped');
 
-      if (typeof onAnimationStopped == 'function') onAnimationStopped.call(obj, obj);
-
+      if(typeof onAnimationStopped === 'function'){ onAnimationStopped.call(obj, obj); }
     }
 
     // Pause animation
     function _pauseAnimation() {
 
-      if (false == _getOption('animating') || true == _getOption('paused')) return false;
-
+      if(false === _getOption('animating') || true === _getOption('paused')){ return false; }
       clearTimeout(_getOption('interval'));
-
       _setOption('paused', true);
-
       var onAnimationPaused = _getOption('onAnimationPaused');
 
-      if (typeof onAnimationPaused == 'function') onAnimationPaused.call(obj, obj);
-
+      if(typeof onAnimationPaused === 'function'){ onAnimationPaused.call(obj, obj); }
     }
 
     // Resume animation
     function _resumeAnimation() {
-
-      if (false == _getOption('animating') || false == _getOption('paused')) return false;
-
+      if(false === _getOption('animating') || false === _getOption('paused')){ return false; }
       _setOption('paused', false);
-
       _doAnimation();
-
       var onAnimationResumed = _getOption('onAnimationResumed');
-
-      if (typeof onAnimationResumed == 'function') onAnimationResumed.call(obj, obj);
-
+      if(typeof onAnimationResumed === 'function'){ onAnimationResumed.call(obj, obj); }
     }
 
     // Default linear interpolation
     function _noEasing(x, t, b, c, d) {
-
       return t / d * c + b;
-
     }
-
-  }
+  };
 
 })(jQuery);
 
 // Used to remove white space in counter that causes rendering bugs
 jQuery.fn.htmlClean = function () {
-
   this.contents().filter(function () {
-
-    if (this.nodeType != 3) {
-
+    if(this.nodeType != 3) {
       $(this).htmlClean();
-
       return false;
-
     } else {
-
       return !/\S/.test(this.nodeValue);
-
     }
-
   }).remove();
-
 }
